@@ -84,6 +84,6 @@ templates/
 
 Author
 
-This project was developed by Anvi Ghadge,
+Anvi Ghadge
 B.Tech student in Computer Science and Design, YCCE,
 as part of the GramIQ Internship Assignment focused on building an automated farm finance report generator.
