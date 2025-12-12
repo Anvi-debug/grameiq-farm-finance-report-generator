@@ -83,7 +83,7 @@ Exactly as required in the assignment:
 
 ### **Backend**
 
-* Python 3.9+
+* Python 3.11+
 * Flask (for routing, form handling)
 
 ### **PDF Generation**
