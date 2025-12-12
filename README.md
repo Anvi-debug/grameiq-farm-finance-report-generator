@@ -1,78 +1,89 @@
-**GramIQ Farm Finance Report Generator**
+# GramIQ Farm Finance Report Generator
 
-This project implements a Flask-based backend application that collects farm financial data and generates a structured PDF report following GramIQ’s reporting format. The system processes crop details, income entries, expense entries, and automatically produces a finance summary, ledger, and embedded chart.
+This project provides a Flask-based web application that allows farmers to enter crop, expense, and income details and generate a clean, structured PDF finance report. The system supports automatic calculations, dynamic charts, and repeated headers/footers in the final PDF for professional documentation.
 
 ## Features
 
-* Form-based data collection for farmer, crop, income, and expense details
-* Automatic calculations: total income, total expense, profit/loss, and cost of cultivation per acre
-* Auto-generated ledger combining income and expense entries
-* Income vs. Expense bar chart embedded directly in the PDF
-* Repeating header with GramIQ logo
-* Repeating footer on each page
-* Clean, print-ready PDF layout with margins (1 inch top/bottom, 1.25 inches left/right)
+* Form-based data entry for crop, farmer, income, and expense details
+* Automatic calculations:
+
+  * Total income
+  * Total expense
+  * Profit/Loss
+  * Cost of cultivation per acre
+* Auto-generated charts (Income vs Expense) embedded inside the PDF
+* Repeating header with GramIQ branding on all PDF pages
+* Repeating footer on all pages
+* Clean and print-ready PDF layout built using `xhtml2pdf`
+* Structured tables for Expense Breakdown, Income Breakdown, and Ledger
 
 ## Project Structure
 
 ```
 app.py
 requirements.txt
+
 static/
-   ├── style.css
-   ├── logo.png
-   └── charts/
+   charts/
+   style.css
+   logo.png
+
 templates/
-   ├── form.html
-   └── report.html
+   form.html
+   report.html
 ```
 
-## Setup Instructions
+## Installation & Setup
 
-1. Clone the repository:
-
-   ```
-   git clone <repository-link>
-   cd gramiq-farm-finance-report-generator
-   ```
-
-2. Create and activate a virtual environment:
+1. Create and activate a virtual environment:
 
    ```
    python -m venv venv
-   venv\Scripts\activate       (Windows)
+   venv\Scripts\activate   # Windows
    ```
 
-3. Install dependencies:
+2. Install dependencies:
 
    ```
    pip install -r requirements.txt
    ```
 
-4. Run the application:
+3. Run the application:
 
    ```
    python app.py
    ```
 
-5. Open the local server in a browser:
+4. Open the application in a browser:
 
    ```
    http://127.0.0.1:5000
    ```
 
-Fill the form and generate the PDF report.
+## Usage
+
+1. Fill in crop, farmer, expense, and income details in the form.
+2. Submit the form to generate a structured finance report.
+3. The system automatically produces:
+
+   * Summary calculations
+   * Categorized tables
+   * Ledger entries
+   * A chart image
+4. A downloadable PDF file is generated with professional formatting.
 
 ## Requirements
 
-The project uses the following main packages:
-
+* Python 3.9+
 * Flask
 * xhtml2pdf
 * matplotlib
+* Jinja2
 
-(All dependencies are listed in `requirements.txt`.)
+(All required packages are included in `requirements.txt`.)
 
-## Author
+Author
 
-Anvi Ghadge
-B.Tech, Computer Science and Design
+This project was developed by Anvi Ghadge,
+B.Tech student in Computer Science and Design, YCCE,
+as part of the GramIQ Internship Assignment focused on building an automated farm finance report generator.
