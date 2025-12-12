@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ crop_name }} Report</title>
+
+  <!-- PDF MARGINS: 1 inch top/bottom (72pt), 1.25 inch left/right (90pt) -->
+  <style>
+    @page { margin: 72pt 90pt 72pt 90pt; }
+
+    /* Base */
+    body {
+      font-family: "DejaVu Sans", Arial, Helvetica, sans-serif;
+      color: #222;
+      margin: 0;
+      padding: 0;
+      font-size: 12px;
+    }
+
+    /* Header (fixed, for appearance) */
+    header {
+      position: fixed;
+      top: -56pt;              /* negative to place header into top margin area */
+      left: 0;
+      right: 0;
+      height: 56pt;
+      padding: 6px 0;
+      text-align: center;
+      border-bottom: 1px solid #e2e2e2;
+      background: #fff;
+    }
+
+    /* Footer (final block repeated by overlay, but keep this for visual fallback) */
+    footer {
+      position: fixed;
+      bottom: -60pt;
+      left: 0;
+      right: 0;
+      height: 50pt;
+      text-align: center;
+      padding-top: 8px;
+      border-top: 1px solid #e2e2e2;
+      font-size: 11px;
+      color: #444;
+    }
+
+    img.logo { height: 44px; display: block; margin: 0 auto; }
+    .container { margin-top: 8px; padding-bottom: 12px; }
+
+    h2 { margin: 14px 0 8px 0; font-size: 15px; color: #203040; }
+
+    /* Table base */
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .summary-table td, .data-table th, .data-table td {
+      border: 1px solid #e6e6e6;
+      padding: 8px 10px;
+      font-size: 12px;
+      vertical-align: middle;
+    }
+
+    .data-table thead th {
+      background: #cfe8ff;
+      color: #123;
+      font-weight: 700;
+      padding: 9px 10px;
+    }
+
+    .data-table tbody tr:nth-child(even) { background: #fbfbfb; }
+
+    /* Column sizing and no-wrap for dates */
+    .col-date {
+      width: 18%;
+      white-space: nowrap;   /* prevent date wrapping */
+    }
+    .col-category { width: 22%; }
+    .col-description { width: 40%; }
+    .col-amount {
+      width: 20%;
+      text-align: right;
+      padding-right: 10px;
+    }
+
+    /* ensure other cells wrap safely */
+    td, th { overflow-wrap: break-word; word-break: break-word; }
+
+    /* small chart */
+    .chart { margin-top: 8px; }
+    .chart img { width: 420px; display: block; margin-top: 10px; }
+
+    /* Simple utility */
+    .right { text-align: right; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    {% if logo_b64 %}
+      <img class="logo" src="data:image/png;base64,{{ logo_b64 }}" alt="GramIQ logo">
+    {% elif logo_path %}
+      <img class="logo" src="{{ logo_path }}" alt="GramIQ logo">
+    {% else %}
+      <div style="font-weight:700; font-size:18px; color:#1f2d3d;">GramIQ</div>
+    {% endif %}
+
+    <div style="font-weight:700; margin-top:4px; font-size:13px;">
+      {{ crop_name }}_{{ total_acres }}_{{ season }}_{{ generated_on[:4] }}
+    </div>
+    <div style="font-size:11px; color:#555; margin-top:2px;">
+      Report generated on: {{ generated_on }}
+    </div>
+    <div style="font-size:11px; color:#444; margin-top:4px;">
+      Farmer: <strong>{{ farmer_name }}</strong> — {{ location }}
+    </div>
+  </header>
+
+
+  <!-- Main content -->
+  <div class="container">
+    <!-- Summary -->
+    <section>
+      <h2>Finance Summary</h2>
+      <table class="summary-table">
+        <tr><td>Total Income</td><td class="col-amount">₹ {{ '{:,.2f}'.format(total_income) }}</td></tr>
+        <tr><td>Total Expense</td><td class="col-amount">₹ {{ '{:,.2f}'.format(total_expense) }}</td></tr>
+        <tr><td>Total Production</td><td>{{ total_production }}</td></tr>
+        <tr><td>Profit / Loss</td><td class="col-amount">₹ {{ '{:,.2f}'.format(profit_loss) }}</td></tr>
+        <tr><td>Cost of Cultivation / Acre</td><td class="col-amount">₹ {{ '{:,.2f}'.format(cost_per_acre) }}</td></tr>
+        <tr><td>Sowing Date</td><td class="col-date">{{ sowing_date }}</td></tr>
+        <tr><td>Harvest Date</td><td class="col-date">{{ harvest_date }}</td></tr>
+      </table>
+
+      <div style="margin-top:8px; font-size:11px; color:#444;">
+        <em>Formula:</em> Cost of Cultivation = <strong>Total Expense / Total Acres</strong>
+      </div>
+
+      {% if chart_b64 %}
+      <div class="chart">
+        <img src="data:image/png;base64,{{ chart_b64 }}" alt="chart">
+      </div>
+      {% elif chart_path %}
+      <div class="chart">
+        <img src="{{ chart_path }}" alt="chart">
+      </div>
+      {% endif %}
+    </section>
+
+    <!-- Expense table -->
+    <section>
+      <h2>Expense Breakdown</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="col-date">Date</th>
+            <th class="col-category">Category</th>
+            <th class="col-description">Description</th>
+            <th class="col-amount">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for e in expenses %}
+          <tr>
+            <td class="col-date" style="white-space:nowrap;">{{ e.date }}</td>
+            <td>{{ e.category }}</td>
+            <td>{{ e.description }}</td>
+            <td class="col-amount">₹ {{ '{:,.2f}'.format(e.amount) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Income table -->
+    <section>
+      <h2>Income Breakdown</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="col-date">Date</th>
+            <th class="col-category">Category</th>
+            <th class="col-description">Description</th>
+            <th class="col-amount">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in incomes %}
+          <tr>
+            <td class="col-date" style="white-space:nowrap;">{{ i.date }}</td>
+            <td>{{ i.category }}</td>
+            <td>{{ i.description }}</td>
+            <td class="col-amount">₹ {{ '{:,.2f}'.format(i.amount) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Ledger -->
+    <section>
+      <h2>Ledger</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="col-date">Date</th>
+            <th class="col-category">Particulars</th>
+            <th class="col-category">Type</th>
+            <th class="col-description">Description</th>
+            <th class="col-amount">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in ledger %}
+          <tr>
+            <td class="col-date" style="white-space:nowrap;">{{ r.date }}</td>
+            <td>{{ r.particulars }}</td>
+            <td>{{ r.type }}</td>
+            <td>{{ r.description }}</td>
+            <td class="col-amount">₹ {{ '{:,.2f}'.format(r.amount) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+</body>
+</html>

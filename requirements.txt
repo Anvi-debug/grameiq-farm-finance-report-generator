@@ -1,0 +1,4 @@
+Flask>=2.0
+WeasyPrint>=57.0
+matplotlib>=3.0
+xhtml2pdf>=0.2.8

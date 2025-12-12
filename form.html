@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GramIQ - Farm Finance Form</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Farm Finance Report Generator</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash">
+          {% for cat, msg in messages %}
+            <div class="flash-{{cat}}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/generate">
+      <section class="card">
+        <h2>Farmer & Crop Details</h2>
+        <label>Farmer Name</label>
+        <input type="text" name="farmer_name" required>
+
+        <label>Crop Name</label>
+        <input type="text" name="crop_name" required>
+
+        <label>Season</label>
+        <input type="text" name="season" placeholder="e.g., Kharif" required>
+
+        <label>Total Acres</label>
+        <input type="number" name="total_acres" step="0.01" required>
+
+        <label>Total Production (quintals)</label>
+        <input type="number" name="total_production" step="0.01" placeholder="e.g., 5">
+
+        <label>Date of Sowing</label>
+        <input type="date" name="sowing_date">
+
+        <label>Date of Harvest</label>
+        <input type="date" name="harvest_date">
+
+        <label>Location</label>
+        <input type="text" name="location" placeholder="Village / Taluka / District">
+      </section>
+
+      <section class="card">
+        <h2>Expenses</h2>
+        <table id="expense-table">
+          <thead><tr><th>Category</th><th>Amount</th><th>Date</th><th>Description</th><th></th></tr></thead>
+          <tbody>
+            <tr>
+              <td><input name="expense_category[]" required></td>
+              <td><input name="expense_amount[]" type="number" step="0.01" required></td>
+              <td><input name="expense_date[]" type="date"></td>
+              <td><input name="expense_desc[]"></td>
+              <td><button type="button" class="remove" onclick="removeRow(this)">−</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" onclick="addExpenseRow()">Add Expense Row</button>
+      </section>
+
+      <section class="card">
+        <h2>Incomes</h2>
+        <table id="income-table">
+          <thead><tr><th>Category</th><th>Amount</th><th>Date</th><th>Description</th><th></th></tr></thead>
+          <tbody>
+            <tr>
+              <td><input name="income_category[]" required></td>
+              <td><input name="income_amount[]" type="number" step="0.01" required></td>
+              <td><input name="income_date[]" type="date"></td>
+              <td><input name="income_desc[]"></td>
+              <td><button type="button" class="remove" onclick="removeRow(this)">−</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" onclick="addIncomeRow()">Add Income Row</button>
+      </section>
+
+      <div style="text-align:center; margin-top:20px;">
+        <button type="submit" class="primary">Generate PDF Report</button>
+      </div>
+    </form>
+  </div>
+
+<script>
+function addExpenseRow(){
+  const tbody = document.getElementById('expense-table').querySelector('tbody');
+  const row = tbody.rows[0].cloneNode(true);
+  row.querySelectorAll('input').forEach(i => i.value = '');
+  tbody.appendChild(row);
+}
+function addIncomeRow(){
+  const tbody = document.getElementById('income-table').querySelector('tbody');
+  const row = tbody.rows[0].cloneNode(true);
+  row.querySelectorAll('input').forEach(i => i.value = '');
+  tbody.appendChild(row);
+}
+function removeRow(btn){
+  const tbody = btn.closest('tbody');
+  if(tbody.rows.length > 1) btn.closest('tr').remove();
+}
+</script>
+</body>
+</html>

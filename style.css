@@ -1,0 +1,71 @@
+/* static/style.css - improves form preview and small print tweaks */
+
+body { font-family: Arial, Helvetica, sans-serif; color:#222; margin:0; padding:0; background:#f6f8fb; }
+.container { max-width:920px; margin:18px auto; padding:18px; background:#fff; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.04); }
+h1 { margin:0 0 10px 0; font-size:22px; color:#1f2d3d; }
+h2 { margin:10px 0; font-size:18px; }
+
+/* card */
+.card { padding:14px; border-radius:8px; border:1px solid #eef1f4; background:#fff; }
+
+/* labels & inputs */
+label { display:block; margin-top:10px; font-size:14px; color:#333; font-weight:600; }
+input[type="text"], input[type="number"], input[type="date"], select, textarea {
+  width:100%; padding:9px 10px; margin-top:8px; box-sizing:border-box; border:1px solid #d6dae0; border-radius:6px; font-size:14px;
+}
+
+/* table in browser preview */
+table { width:100%; border-collapse: collapse; margin-top:10px; }
+.data-table th, .data-table td, .summary-table td { border:1px solid #e9edf1; padding:8px 10px; font-size:13px; vertical-align:middle; }
+.data-table thead th { background:#cfe8ff; }
+
+/* buttons */
+.primary { background:#0b6cff; color:#fff; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:700; }
+button { padding:8px 10px; border-radius:8px; border:1px solid #d8dbe0; background:#fff; cursor:pointer; }
+
+/* remove button */
+button.remove { background:#ff6b6b; color:#fff; border:none; padding:6px 8px; }
+
+/* flash messages */
+.flash { margin-bottom:12px; }
+.flash-error { color:#8b0000; background:#fff0f0; padding:8px; border-radius:6px; }
+
+/* small responsive */
+@media (max-width:720px) {
+  .container { padding:12px; margin:12px; }
+  h1 { font-size:18px; }
+}
+
+/* print tweaks (applies when you view HTML fallback) */
+@media print {
+  body { background:#fff; }
+  .container { box-shadow:none; border:none; }
+}
+
+/* Ledger & table column sizing — ensures date doesn't wrap and amounts align */
+.col-date {
+  width: 18%;
+  white-space: nowrap;  
+  overflow: hidden    /* keep date on a single line */
+}
+
+.col-category { width: 22%; }
+.col-description { width: 40%; }
+
+/* amount column: keep numbers right aligned and reduce left padding */
+.col-amount {
+  width: 20%;
+  text-align: right;
+  padding-right: 12px;
+}
+
+/* optional utility used in report.html for right-aligned numbers */
+.right {
+  text-align: right;
+}
+
+/* ensure table cells can wrap safely elsewhere */
+td, th {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
