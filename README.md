@@ -1,6 +1,7 @@
 # **GramIQ Farm Finance Report Generator**
 
-GramIQ Farm Finance Report Generator This project provides a **Flask-based** web application that allows farmers to enter crop, expense, and income details and generate a clean, structured PDF finance report. The system supports automatic calculations, dynamic charts, and repeated headers/footers in the final PDF for professional documentation.
+A backend application built using Flask that allows farmers to input finance data through a simple web form and automatically generates a clean, structured, branded PDF report containing summaries, tables, and charts.
+This project fulfills all requirements mentioned in the Backend Developer Intern – Technical Assignment by GramIQ
 ---
 
 ## **1. Project Overview**
